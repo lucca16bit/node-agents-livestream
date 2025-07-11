@@ -1,0 +1,35 @@
+{
+  "name": "fastify-livestream",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
+    "dev": "node --env-file .env --experimental-strip-types --no-warnings --watch src/server.ts",
+    "seed": "tsx prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@biomejs/biome": "2.0.6",
+    "@types/node": "^24.0.13",
+    "prisma": "^6.11.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "ultracite": "5.0.32"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.1",
+    "@prisma/client": "^6.11.1",
+    "fastify": "^5.4.0",
+    "fastify-type-provider-zod": "^5.0.2",
+    "postgres": "^3.4.7",
+    "zod": "^4.0.3"
+  }
+}
