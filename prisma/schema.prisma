@@ -12,6 +12,18 @@ model rooms {
   name        String
   description String?
   createdAt   DateTime  @default(now())
+  questions   questions[]
 
   @@map("rooms")
+}
+
+model questions {
+  id          String    @id @default(uuid())
+  question    String    @db.Text
+  answer      String    @db.Text
+  createdAt   DateTime  @default(now())
+  roomId      String
+  room        rooms     @relation(fields: [roomId], references: [id])
+
+  @@map("questions")
 }

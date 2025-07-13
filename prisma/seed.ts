@@ -1,10 +1,9 @@
-/** biome-ignore-all lint/suspicious/noConsole: <explanation> */
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
-    const rooms = await prisma.rooms.createMany({
+    await prisma.rooms.createMany({
         data: [
             {
                 name: 'Sala Principal',
@@ -24,15 +23,42 @@ async function main() {
             },
         ],
     });
-    console.log(rooms);
+
+    const allRooms = await prisma.rooms.findMany();
+
+    const salaPrincipal = allRooms.find((r) => r.name === 'Sala Principal');
+    const salaTecnologia = allRooms.find((r) => r.name === 'Sala de Tecnologia');
+
+    if (!(salaPrincipal && salaTecnologia)) {
+        throw new Error('Salas não encontradas');
+    }
+
+    await prisma.questions.createMany({
+        data: [
+            {
+                question: 'Qual a finalidade desta sala?',
+                answer: 'Discutir qualquer assunto geral com os membros.',
+                roomId: salaPrincipal.id,
+            },
+            {
+                question: 'Quais linguagens são abordadas aqui?',
+                answer: 'JavaScript, TypeScript, Python, Java, entre outras.',
+                roomId: salaTecnologia.id,
+            },
+            {
+                question: 'É permitido divulgar projetos pessoais?',
+                answer: 'Sim, desde que relacionados à tecnologia.',
+                roomId: salaTecnologia.id,
+            },
+        ],
+    });
 }
+
 main()
     .then(async () => {
-        console.log('Seeding concluído!');
         await prisma.$disconnect();
     })
-    .catch(async (e) => {
-        console.error(e);
+    .catch(async () => {
         await prisma.$disconnect();
         process.exit(1);
     });
