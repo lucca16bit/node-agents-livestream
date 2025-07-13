@@ -20,7 +20,7 @@ model rooms {
 model questions {
   id          String    @id @default(uuid())
   question    String    @db.Text
-  answer      String    @db.Text
+  answer      String?    @db.Text
   createdAt   DateTime  @default(now())
   roomId      String
   room        rooms     @relation(fields: [roomId], references: [id])
