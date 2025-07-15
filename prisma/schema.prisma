@@ -8,22 +8,33 @@ datasource db {
 }
 
 model rooms {
-  id          String    @id @default(uuid())
-  name        String
-  description String?
-  createdAt   DateTime  @default(now())
-  questions   questions[]
+  id           String         @id @default(uuid())
+  name         String
+  description  String?
+  createdAt    DateTime       @default(now())
+  audio_chunks audio_chunks[]
+  questions    questions[]
 
   @@map("rooms")
 }
 
 model questions {
-  id          String    @id @default(uuid())
-  question    String    @db.Text
-  answer      String?    @db.Text
-  createdAt   DateTime  @default(now())
-  roomId      String
-  room        rooms     @relation(fields: [roomId], references: [id])
+  id        String   @id @default(uuid())
+  question  String
+  answer    String?
+  createdAt DateTime @default(now())
+  roomId    String
+  room      rooms    @relation(fields: [roomId], references: [id])
 
   @@map("questions")
+}
+
+model audio_chunks {
+  id            String                @id @default(uuid())
+  transcription String
+  roomId        String
+  embeddings    Unsupported("vector")
+  room          rooms                 @relation(fields: [roomId], references: [id])
+
+  @@map("audio_chunks")
 }

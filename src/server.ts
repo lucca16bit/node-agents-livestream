@@ -1,4 +1,5 @@
 import { fastifyCors } from '@fastify/cors';
+import { fastifyMultipart } from '@fastify/multipart';
 import { fastify } from 'fastify';
 import {
     serializerCompiler,
@@ -13,6 +14,8 @@ const app = fastify().withTypeProvider<ZodTypeProvider>();
 app.register(fastifyCors, {
     origin: 'http://localhost:5173',
 });
+
+app.register(fastifyMultipart);
 
 app.setSerializerCompiler(serializerCompiler);
 app.setValidatorCompiler(validatorCompiler);
