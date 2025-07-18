@@ -1,6 +1,9 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from '../db/db.ts';
-import { transcribeAudio } from '../services/gemini.service.ts';
+import {
+    generateEmbeddings,
+    transcribeAudio,
+} from '../services/gemini.service.ts';
 import { Send } from '../utils/response.util.ts';
 import { roomSchema } from '../validations/room.schema.ts';
 
@@ -31,7 +34,21 @@ export const AudioController = {
                 audio.mimetype
             );
 
-            return Send.success(res, { transcription });
+            const embeddings = await generateEmbeddings(transcription);
+
+            const result = (await prisma.$queryRaw`
+            INSERT INTO audio_chunks (id, transcription, embeddings, "roomId")
+            VALUES (gen_random_uuid(), ${transcription}, ${embeddings}::vector, ${roomId})
+            RETURNING id
+            `) as { id: string }[];
+
+            const chunk = result[0];
+
+            if (!chunk) {
+                return Send.error(res, null, 'Erro ao salvar o chunk de áudio');
+            }
+
+            return Send.success(res, { chunkId: chunk.id });
         } catch (_err) {
             return Send.error(res, null, 'Falha ao transcrever o áudio.');
         }

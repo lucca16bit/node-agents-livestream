@@ -32,8 +32,8 @@ model questions {
 model audio_chunks {
   id            String                @id @default(uuid())
   transcription String
-  roomId        String
   embeddings    Unsupported("vector")
+  roomId        String
   room          rooms                 @relation(fields: [roomId], references: [id])
 
   @@map("audio_chunks")
