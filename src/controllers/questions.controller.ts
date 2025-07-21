@@ -101,7 +101,7 @@ export const QuestionsController = {
                 'Pergunta criada com sucesso!'
             );
         } catch (_err) {
-            return Send.error(res, null, 'Falha ao criar nova sala.');
+            return Send.error(res, null, 'Falha ao criar a pergunta.');
         }
     },
 };
