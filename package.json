@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
-    "build": "npm install && npx prisma generate && npx prisma db push",
+    "start": "node --experimental-strip-types --no-warnings src/server.ts",
+    "build": "npx prisma generate",
+    "postbuild": "npx prisma db push --accept-data-loss",
     "dev": "node --env-file .env --experimental-strip-types --no-warnings --watch src/server.ts",
     "seed": "tsx prisma/seed.ts"
   },
