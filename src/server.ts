@@ -9,10 +9,15 @@ import {
 import { env } from './env.ts';
 import { router } from './routes/router.ts';
 
-const app = fastify().withTypeProvider<ZodTypeProvider>();
+const app = fastify({
+    logger: env.NODE_ENV === 'production',
+}).withTypeProvider<ZodTypeProvider>();
 
 app.register(fastifyCors, {
-    origin: 'http://localhost:5173',
+    origin:
+        env.NODE_ENV === 'production'
+            ? ['https://agents-livestream.vercel.app']
+            : 'http://localhost:5173',
 });
 
 app.register(fastifyMultipart);
@@ -26,4 +31,16 @@ app.get('/health', () => {
 
 app.register(router);
 
-app.listen({ port: env.PORT });
+const start = async () => {
+    try {
+        await app.listen({
+            host: '0.0.0.0',
+            port: env.PORT,
+        });
+    } catch (err) {
+        app.log.error(err);
+        process.exit(1);
+    }
+};
+
+start();

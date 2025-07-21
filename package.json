@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
+    "build": "npm install && npx prisma generate && npx prisma db push",
     "dev": "node --env-file .env --experimental-strip-types --no-warnings --watch src/server.ts",
     "seed": "tsx prisma/seed.ts"
   },
